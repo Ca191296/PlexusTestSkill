@@ -5,19 +5,23 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
 import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import java.lang.Thread;
 
 public class MainPageTest {
-    private WebDriver driver;
-    private MainPage mainPage;
+    public WebDriver driver;
+    public PlexusMainPage plexusMainPage;
+    public PlexusAboutPage plexusAboutPage;
+    public PlexusOurStoryPage plexusOurStoryPage;
+    public String URL;
+
 
     @BeforeTest
     static void setupClass() {
@@ -29,9 +33,12 @@ public class MainPageTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.get("https://www.jetbrains.com/");
+        driver.get("https://plexusworldwide.com/");
 
-        mainPage = new MainPage(driver);
+        plexusMainPage = new PlexusMainPage(driver);
+        plexusAboutPage = new PlexusAboutPage(driver);
+        plexusOurStoryPage = new PlexusOurStoryPage(driver);
+
     }
 
     @AfterMethod
@@ -40,33 +47,21 @@ public class MainPageTest {
     }
 
     @Test
-    public void search() {
-        mainPage.searchButton.click();
+    public void GetSiteElement() throws InterruptedException {
+        plexusAboutPage.BtnAcceptCookies.click();
 
-        WebElement searchField = driver.findElement(By.cssSelector("[data-test='search-input']"));
-        searchField.sendKeys("Selenium");
+        String ProdText = plexusMainPage.GetTxtProd();
+        System.out.print("This is the Product of the Month Description: " + ProdText);
 
-        WebElement submitButton = driver.findElement(By.cssSelector("button[data-test='full-search-button']"));
-        submitButton.click();
+        driver.navigate().to("https://plexusworldwide.com/about");
 
-        WebElement searchPageField = driver.findElement(By.cssSelector("input[data-test='search-input']"));
-        assertEquals(searchPageField.getAttribute("value"), "Selenium");
+        plexusAboutPage.OpenPlexusStory();
+        plexusOurStoryPage.ShopOurProdructs();
+
+        URL = driver.getCurrentUrl();
+        Assert.assertEquals(URL, "https://shop.plexusworldwide.com/products");
+
     }
 
-    @Test
-    public void toolsMenu() {
-        mainPage.toolsMenu.click();
 
-        WebElement menuPopup = driver.findElement(By.cssSelector(".main-submenu__content"));
-        assertTrue(menuPopup.isDisplayed());
-    }
-
-    @Test
-    public void navigationToAllTools() {
-        mainPage.seeAllToolsButton.click();
-
-        WebElement productsList = driver.findElement(By.id("products-page"));
-        assertTrue(productsList.isDisplayed());
-        assertEquals(driver.getTitle(), "All Developer Tools and Products by JetBrains");
-    }
 }
