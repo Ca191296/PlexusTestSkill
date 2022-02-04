@@ -25,4 +25,8 @@ public class PlexusAboutPage {
         BtnOurStory.click();
 
     }
+
+    public void NavigateToPlexusAboutWebPage(){
+        MainPageTest.driver.navigate().to("https://plexusworldwide.com/about");
+    }
 }

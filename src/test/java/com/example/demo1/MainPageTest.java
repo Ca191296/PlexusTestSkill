@@ -16,7 +16,7 @@ import static org.testng.Assert.assertTrue;
 import java.lang.Thread;
 
 public class MainPageTest {
-    public WebDriver driver;
+    public static WebDriver driver;
     public PlexusMainPage plexusMainPage;
     public PlexusAboutPage plexusAboutPage;
     public PlexusOurStoryPage plexusOurStoryPage;
@@ -47,13 +47,13 @@ public class MainPageTest {
     }
 
     @Test
-    public void GetSiteElement() throws InterruptedException {
+    public void GetSiteElement(){
         plexusAboutPage.BtnAcceptCookies.click();
 
         String ProdText = plexusMainPage.GetTxtProd();
         System.out.print("This is the Product of the Month Description: " + ProdText);
 
-        driver.navigate().to("https://plexusworldwide.com/about");
+        plexusAboutPage.NavigateToPlexusAboutWebPage();
 
         plexusAboutPage.OpenPlexusStory();
         plexusOurStoryPage.ShopOurProdructs();
